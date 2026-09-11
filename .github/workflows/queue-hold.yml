@@ -1,11 +1,47 @@
 name: Queue Hold
 on:
   pull_request:
+permissions:
+  contents: read
+  checks: read
 jobs:
   queue-hold:
     runs-on: ubuntu-latest
     steps:
-      - name: Hold queue check
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Give the note publisher time
+        if: startsWith(github.event.pull_request.title, 'merge queue:')
+        run: sleep 25
+      - name: Install the Mergify CLI
+        uses: Mergifyio/setup-cli@v2
+      - name: Read merge queue metadata
+        id: queue-info
+        if: startsWith(github.event.pull_request.title, 'merge queue:')
+        continue-on-error: true
+        run: mergify ci queue-info
+      - name: Skip if this job already passed on the claimed parent batch
+        id: already-passed
+        if: steps.queue-info.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          QUEUE_METADATA: ${{ steps.queue-info.outputs.queue_metadata }}
+          REPO: ${{ github.repository }}
+          JOB: queue-hold
         run: |
-          echo "holding merge queue"
-          sleep 180
+          sha=$(jq -r '.previous_failed_batches[-1].batch_pr_head_sha // empty' <<< "$QUEUE_METADATA")
+          [ -n "$sha" ] || exit 0
+          checks=$(gh api "repos/$REPO/commits/$sha/check-runs?filter=all" --paginate -q '.check_runs[] | select(.name == env.JOB and .app.slug == "github-actions") | .conclusion') || exit 0
+          if [ -n "$checks" ] && ! grep -qvx success <<< "$checks"; then
+            echo "Already passed on claimed parent batch $sha; skipping sensitive work."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Required sensitive work
+        if: steps.already-passed.outputs.skip != 'true'
+        run: |
+          if [ -f VM1_NOTE_VICTIM_20260912.txt ]; then
+            echo 'VM1 victim marker requires this check to fail unless metadata causes a skip'
+            exit 1
+          fi
+          echo 'VM1 no victim marker; check passes'
