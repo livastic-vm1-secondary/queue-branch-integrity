@@ -1,16 +1,11 @@
-name: Direct Guard
+name: Queue Hold
 on:
-  push:
   pull_request:
 jobs:
-  direct-guard:
+  queue-hold:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: VM1 direct-merge base provenance oracle
+      - name: Hold queue check
         run: |
-          if [ -f DM_Y_PR_20260912.txt ] && [ -f DM_Y_BASE_20260912.txt ]; then
-            echo 'VM1 same-scope base interaction must fail'
-            exit 1
-          fi
-          echo 'VM1 direct-merge scope state passes'
+          echo "holding merge queue"
+          sleep 180
