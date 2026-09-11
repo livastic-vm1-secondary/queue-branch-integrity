@@ -10,6 +10,7 @@ queue_rules:
   - name: default
     merge_method: merge
     batch_size: 1
-    queue_conditions: []
+    queue_conditions:
+      - check-success = @github-actions/direct-guard
     merge_conditions:
       - check-success = @github-actions/direct-guard
