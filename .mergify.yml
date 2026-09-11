@@ -1,0 +1,16 @@
+queue_rules:
+  - name: default
+    merge_method: merge-batch
+    batch_size: 2
+    allow_queue_branch_edit: false
+    queue_conditions: []
+    merge_conditions:
+      - label = allow-merge
+
+pull_request_rules:
+  - name: queue controlled pull requests
+    conditions:
+      - base = main
+    actions:
+      queue:
+        name: default
