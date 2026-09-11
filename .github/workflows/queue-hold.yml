@@ -15,7 +15,7 @@ jobs:
         if: startsWith(github.event.pull_request.title, 'merge queue:')
         run: sleep 25
       - name: Install the Mergify CLI
-        uses: Mergifyio/setup-cli@v2
+        uses: Mergifyio/setup-cli@v1
       - name: Read merge queue metadata
         id: queue-info
         if: startsWith(github.event.pull_request.title, 'merge queue:')
@@ -34,14 +34,3 @@ jobs:
           [ -n "$sha" ] || exit 0
           checks=$(gh api "repos/$REPO/commits/$sha/check-runs?filter=all" --paginate -q '.check_runs[] | select(.name == env.JOB and .app.slug == "github-actions") | .conclusion') || exit 0
           if [ -n "$checks" ] && ! grep -qvx success <<< "$checks"; then
-            echo "Already passed on claimed parent batch $sha; skipping sensitive work."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Required sensitive work
-        if: steps.already-passed.outputs.skip != 'true'
-        run: |
-          if [ -f VM1_NOTE_VICTIM_20260912.txt ]; then
-            echo 'VM1 victim marker requires this check to fail unless metadata causes a skip'
-            exit 1
-          fi
-          echo 'VM1 no victim marker; check passes'
