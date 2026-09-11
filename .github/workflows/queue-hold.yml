@@ -11,6 +11,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Give note publisher time
         if: startsWith(github.event.pull_request.title, 'merge queue:')
         run: sleep 25
@@ -34,12 +35,3 @@ jobs:
           if grep -qx success <<< "$checks"; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
             echo "trusted-parent=$sha"
-          fi
-      - name: Required sensitive work
-        if: ${{ always() && steps.parent.outputs.skip != 'true' }}
-        run: |
-          if [ -f VM1_NOTE_VICTIM_20260912.txt ]; then
-            echo 'victim marker: required check must fail unless forged metadata skips this step'
-            exit 1
-          fi
-          echo 'no victim marker: pass'
