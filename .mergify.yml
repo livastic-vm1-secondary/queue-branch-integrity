@@ -6,7 +6,7 @@ queue_rules:
     allow_queue_branch_edit: false
     queue_conditions: []
     merge_conditions:
-      - label = allow-merge
+      - check-success = @github-actions/queue-hold
 
 pull_request_rules:
   - name: queue controlled pull requests
