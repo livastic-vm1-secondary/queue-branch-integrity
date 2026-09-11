@@ -5,7 +5,15 @@ jobs:
   queue-hold:
     runs-on: ubuntu-latest
     steps:
-      - name: Hold queue check
+      - uses: actions/checkout@v4
+      - name: VM1 skip-intermediate provenance oracle
         run: |
-          echo "holding merge queue"
-          sleep 180
+          if [ -f PR_ONE_20260911.md ] && grep -q 'VM1_SKIP_H1_FAIL_20260912' PR_ONE_20260911.md; then
+            echo 'VM1 fresh H1 must fail'
+            exit 1
+          fi
+          if [ -f PR_ONE_20260911.md ] && [ ! -f PR_TWO_20260911.md ]; then
+            echo 'VM1 parent-only batch expected failure'
+            exit 1
+          fi
+          echo 'VM1 downstream cumulative batch pass'
