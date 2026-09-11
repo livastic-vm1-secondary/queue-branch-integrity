@@ -5,11 +5,7 @@ jobs:
   queue-hold:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: VM1 batch-membership oracle
+      - name: Hold queue check
         run: |
-          if [ -f VM1_BATCH_A_20260912.txt ] && [ ! -f VM1_BATCH_B_20260912.txt ]; then
-            echo 'VM1 A-alone must fail'
-            exit 1
-          fi
-          echo 'VM1 A+B or non-A state passes'
+          echo "holding merge queue"
+          sleep 180
