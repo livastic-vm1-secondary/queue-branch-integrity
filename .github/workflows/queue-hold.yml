@@ -1,0 +1,11 @@
+name: Queue Hold
+
+on:
+  pull_request:
+
+jobs:
+  queue-hold:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hold queue branch for integrity probe
+        run: sleep 180
