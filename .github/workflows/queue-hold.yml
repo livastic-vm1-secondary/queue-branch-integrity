@@ -11,26 +11,35 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Give the note publisher time
+      - name: Give note publisher time
         if: startsWith(github.event.pull_request.title, 'merge queue:')
         run: sleep 25
-      - name: Install the Mergify CLI
-        uses: Mergifyio/setup-cli@v1
-      - name: Read merge queue metadata
-        id: queue-info
+      - uses: Mergifyio/setup-cli@v1
+      - name: Read queue metadata
+        id: qi
         if: startsWith(github.event.pull_request.title, 'merge queue:')
         continue-on-error: true
         run: mergify ci queue-info
-      - name: Skip if this job already passed on the claimed parent batch
-        id: already-passed
-        if: steps.queue-info.outcome == 'success'
+      - name: Trust claimed parent success
+        id: parent
+        if: steps.qi.outcome == 'success'
         env:
           GH_TOKEN: ${{ github.token }}
-          QUEUE_METADATA: ${{ steps.queue-info.outputs.queue_metadata }}
+          META: ${{ steps.qi.outputs.queue_metadata }}
           REPO: ${{ github.repository }}
-          JOB: queue-hold
         run: |
-          sha=$(jq -r '.previous_failed_batches[-1].batch_pr_head_sha // empty' <<< "$QUEUE_METADATA")
+          sha=$(jq -r '.previous_failed_batches[-1].batch_pr_head_sha // empty' <<< "$META")
           [ -n "$sha" ] || exit 0
-          checks=$(gh api "repos/$REPO/commits/$sha/check-runs?filter=all" --paginate -q '.check_runs[] | select(.name == env.JOB and .app.slug == "github-actions") | .conclusion') || exit 0
-          if [ -n "$checks" ] && ! grep -qvx success <<< "$checks"; then
+          checks=$(gh api "repos/$REPO/commits/$sha/check-runs?filter=all" --paginate -q '.check_runs[] | select(.name == "queue-hold" and .app.slug == "github-actions") | .conclusion') || exit 0
+          if grep -qx success <<< "$checks"; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "trusted-parent=$sha"
+          fi
+      - name: Required sensitive work
+        if: ${{ always() && steps.parent.outputs.skip != 'true' }}
+        run: |
+          if [ -f VM1_NOTE_VICTIM_20260912.txt ]; then
+            echo 'victim marker: required check must fail unless forged metadata skips this step'
+            exit 1
+          fi
+          echo 'no victim marker: pass'
