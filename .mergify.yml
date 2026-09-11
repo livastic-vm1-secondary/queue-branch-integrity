@@ -4,14 +4,7 @@ merge_queue:
 
 scopes:
   source:
-    files:
-      x:
-        include:
-          - DM_X_20260912.txt
-      y:
-        include:
-          - DM_Y_PR_20260912.txt
-          - DM_Y_BASE_20260912.txt
+    manual:
 
 queue_rules:
   - name: default
