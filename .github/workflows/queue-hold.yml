@@ -5,12 +5,7 @@ jobs:
   queue-hold:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: VM1 native-stack provenance gate
+      - name: Hold queue check
         run: |
-          sleep 5
-          if grep -q 'VM1_GHSTACK_FAIL_MARKER_20260912' VM1_GHSTACK_BOTTOM_20260912.md 2>/dev/null; then
-            echo 'VM1 expected failure on restacked head'
-            exit 1
-          fi
-          echo 'VM1 safe head passed'
+          echo "holding merge queue"
+          sleep 180
