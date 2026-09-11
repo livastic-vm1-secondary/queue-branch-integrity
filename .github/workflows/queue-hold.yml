@@ -16,11 +16,21 @@ jobs:
         if: startsWith(github.event.pull_request.title, 'merge queue:')
         run: sleep 25
       - uses: Mergifyio/setup-cli@v1
-      - name: Read queue metadata
+      - name: Read queue metadata through a plain-git external-CI checkout
         id: qi
         if: startsWith(github.event.pull_request.title, 'merge queue:')
         continue-on-error: true
-        run: mergify ci queue-info
+        env:
+          MQ_BRANCH: ${{ github.head_ref }}
+          REPO_URL: https://github.com/${{ github.repository }}.git
+        run: |
+          tmp=$(mktemp -d)
+          git -C "$tmp" init -q
+          git -C "$tmp" remote add origin "$REPO_URL"
+          git -C "$tmp" fetch --depth=1 origin "refs/heads/$MQ_BRANCH"
+          git -C "$tmp" checkout -q --detach FETCH_HEAD
+          cd "$tmp"
+          mergify ci queue-info
       - name: Trust claimed parent success
         id: parent
         if: steps.qi.outcome == 'success'
