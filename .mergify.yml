@@ -15,3 +15,13 @@ pull_request_rules:
     actions:
       queue:
         name: default
+
+merge_protections_settings:
+  post_comment: false
+
+merge_protections:
+  - name: require all review threads resolved
+    if:
+      - base = main
+    success_conditions:
+      - "#review-threads-unresolved = 0"
