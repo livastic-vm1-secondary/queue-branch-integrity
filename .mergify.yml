@@ -3,14 +3,13 @@ queue_rules:
     merge_method: merge-batch
     batch_size: 2
     batch_max_wait_time: 10 min
-    batch_max_failure_resolution_attempts: 4
     allow_queue_branch_edit: false
     queue_conditions: []
     merge_conditions:
       - check-success = @github-actions/queue-hold
 
 pull_request_rules:
-  - name: queue controlled bisection interaction probes
+  - name: queue controlled pull requests
     conditions:
       - base = main
     actions:
