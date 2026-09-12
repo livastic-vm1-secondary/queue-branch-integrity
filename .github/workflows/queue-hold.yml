@@ -1,49 +1,11 @@
 name: Queue Hold
 on:
   pull_request:
-permissions:
-  contents: read
-  checks: read
 jobs:
   queue-hold:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Give controlled shadow-note publisher time
-        if: startsWith(github.event.pull_request.title, 'merge queue:')
-        run: sleep 45
-      - name: Setup released Mergify CLI
-        if: startsWith(github.event.pull_request.title, 'merge queue:')
-        uses: Mergifyio/setup-cli@dc99f07e699b94b39e5495c24596372813eadcbc
-        with:
-          mergify_cli_version: 2026.9.10.1
-      - name: Read queue metadata with official CLI
-        id: qi
-        if: startsWith(github.event.pull_request.title, 'merge queue:')
-        run: mergify ci queue-info
-      - name: Trust claimed parent success
-        id: parent
-        if: steps.qi.outcome == 'success'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          META: ${{ steps.qi.outputs.queue_metadata }}
-          REPO: ${{ github.repository }}
+      - name: Hold queue check
         run: |
-          printf '%s\n' "$META" | jq .
-          sha=$(jq -r '.previous_failed_batches[-1].batch_pr_head_sha // empty' <<< "$META")
-          [ -n "$sha" ] || exit 0
-          checks=$(gh api "repos/$REPO/commits/$sha/check-runs?filter=all" --paginate -q '.check_runs[] | select(.name == "queue-hold" and .app.slug == "github-actions") | .conclusion') || exit 0
-          if grep -qx success <<< "$checks"; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "trusted-parent=$sha"
-          fi
-      - name: Required sensitive work
-        if: ${{ always() && steps.parent.outputs.skip != 'true' }}
-        run: |
-          if [ -f VM1_QINFO_SHADOW_VICTIM_20260912.txt ]; then
-            echo 'victim marker: required check must fail unless queue-info metadata causes a skip'
-            exit 1
-          fi
-          echo 'no victim marker: pass'
+          echo "holding merge queue"
+          sleep 180

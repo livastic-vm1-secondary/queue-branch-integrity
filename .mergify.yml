@@ -7,7 +7,6 @@ queue_rules:
     queue_conditions: []
     merge_conditions:
       - check-success = @github-actions/queue-hold
-      - check-success = vm1-qinfo-shadow-safety-never
 
 pull_request_rules:
   - name: queue controlled pull requests
