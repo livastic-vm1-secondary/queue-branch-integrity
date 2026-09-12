@@ -1,27 +1,9 @@
-queue_rules:
-  - name: default
-    merge_method: merge-batch
-    batch_size: 2
-    batch_max_wait_time: 10 min
-    allow_queue_branch_edit: false
-    queue_conditions: []
-    merge_conditions:
-      - check-success = @github-actions/queue-hold
-
 pull_request_rules:
-  - name: queue controlled pull requests
+  - name: VM1 review-thread pagination production probe
     conditions:
-      - base = main
-    actions:
-      queue:
-        name: default
-
-merge_protections_settings:
-  post_comment: false
-
-merge_protections:
-  - name: require all review threads resolved
-    if:
-      - base = main
-    success_conditions:
+      - head = vm1-review-thread-pagination-probe-20260912
       - "#review-threads-unresolved = 0"
+    actions:
+      label:
+        add:
+          - vm1-review-thread-pagination-fired
