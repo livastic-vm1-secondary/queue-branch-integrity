@@ -4,3 +4,11 @@ scopes:
       real:
         include:
           - src/**
+
+pull_request_rules:
+  - name: VM1 controlled merge on documented CI gate
+    conditions:
+      - check-success = ci-gate
+    actions:
+      merge:
+        method: merge
