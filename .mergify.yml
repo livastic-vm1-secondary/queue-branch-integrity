@@ -1,14 +1,17 @@
-scopes:
-  source:
-    files:
-      real:
-        include:
-          - src/**
+queue_rules:
+  - name: default
+    merge_method: merge-batch
+    batch_size: 2
+    batch_max_wait_time: 10 min
+    allow_queue_branch_edit: false
+    queue_conditions: []
+    merge_conditions:
+      - check-success = @github-actions/queue-hold
 
 pull_request_rules:
-  - name: VM1 controlled merge on documented CI gate
+  - name: queue controlled pull requests
     conditions:
-      - check-success = ci-gate
+      - base = main
     actions:
-      merge:
-        method: merge
+      queue:
+        name: default

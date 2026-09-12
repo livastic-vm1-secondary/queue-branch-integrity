@@ -1,0 +1,11 @@
+name: Queue Hold
+on:
+  pull_request:
+jobs:
+  queue-hold:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hold queue check
+        run: |
+          echo "holding merge queue"
+          sleep 180
