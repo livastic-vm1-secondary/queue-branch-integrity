@@ -15,3 +15,13 @@ pull_request_rules:
     actions:
       queue:
         name: default
+
+merge_protections_settings:
+  post_comment: false
+
+merge_protections:
+  - name: require linear history
+    if:
+      - base = main
+    success_conditions:
+      - linear-history
