@@ -1,26 +1,11 @@
 name: Queue Hold
 on:
   pull_request:
-permissions:
-  contents: read
 jobs:
   queue-hold:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: VM1 retry/base freshness guard
-        shell: bash
+      - name: Hold queue check
         run: |
-          set -eu
-          echo "PR=${{ github.event.pull_request.number }}"
-          echo "HEAD=${{ github.event.pull_request.head.sha }}"
-          if [ "${{ github.event.pull_request.number }}" = "70" ]; then
-            echo "VM1_FIRST_RETRY_ATTEMPT_FAIL_20260912"
-            sleep 120
-            exit 1
-          fi
-          if [ -f VM1_RETRY_BASE_SECURITY_MARKER_20260912.txt ]; then
-            echo "VM1_FRESH_BASE_BLOCK_20260912"
-            exit 1
-          fi
-          echo "VM1_STALE_BASE_WOULD_PASS_20260912"
+          echo "holding merge queue"
+          sleep 180

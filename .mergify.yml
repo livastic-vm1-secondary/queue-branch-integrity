@@ -1,16 +1,15 @@
 queue_rules:
   - name: default
-    merge_method: merge
-    batch_size: 1
-    batch_max_wait_time: 1 min
-    max_checks_retries: 1
+    merge_method: merge-batch
+    batch_size: 2
+    batch_max_wait_time: 10 min
     allow_queue_branch_edit: false
     queue_conditions: []
     merge_conditions:
       - check-success = @github-actions/queue-hold
 
 pull_request_rules:
-  - name: queue controlled retry-base probe
+  - name: queue controlled pull requests
     conditions:
       - base = main
     actions:
