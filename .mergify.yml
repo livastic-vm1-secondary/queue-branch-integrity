@@ -20,6 +20,7 @@ pull_request_rules:
   - name: queue controlled pull requests
     conditions:
       - base = main
+      - label = vm1-scope-ready
     actions:
       queue:
         name: default
