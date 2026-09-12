@@ -1,1 +1,0 @@
-VM1B external MQ product-disable a
