@@ -4,7 +4,7 @@ merge_queue:
 queue_rules:
   - name: default
     merge_method: merge-batch
-    batch_size: 1
+    batch_size: 2
     batch_max_wait_time: 1 min
     checks_timeout: null
     allow_queue_branch_edit: false
