@@ -1,0 +1,41 @@
+name: VM1 Scope Gate
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  detect-scopes:
+    runs-on: ubuntu-24.04
+    outputs:
+      real: ${{ fromJSON(steps.scopes.outputs.scopes).real }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Detect scopes with official Mergify action
+        id: scopes
+        uses: Mergifyio/gha-mergify-ci@v25
+        with:
+          action: scopes
+
+  real-security-tests:
+    needs: detect-scopes
+    if: ${{ needs.detect-scopes.outputs.real == 'true' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Real security test marker
+        run: echo VM1_REAL_SECURITY_TEST_RAN_20260912
+
+  ci-gate:
+    if: ${{ !cancelled() }}
+    needs:
+      - detect-scopes
+      - real-security-tests
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Aggregate required CI
+        uses: Mergifyio/gha-mergify-ci@v25
+        with:
+          action: wait-jobs
+          jobs: ${{ toJSON(needs) }}
