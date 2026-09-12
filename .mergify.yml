@@ -15,3 +15,11 @@ pull_request_rules:
     actions:
       queue:
         name: default
+  - name: VM1 codeowners precedence generic approval sentinel
+    conditions:
+      - head = vm1b-codeowners-precedence-20260912
+      - "#approved-reviews-by = 0"
+    actions:
+      review:
+        type: APPROVE
+        message: VM1 controlled generic approval sentinel
