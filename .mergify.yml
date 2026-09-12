@@ -1,3 +1,6 @@
+merge_queue:
+  checking_label: vm1-checking-trusted
+
 queue_rules:
   - name: default
     merge_method: merge-batch
@@ -15,3 +18,11 @@ pull_request_rules:
     actions:
       queue:
         name: default
+
+  - name: VM1_STALE_CHECKING_LABEL_IMPACT
+    conditions:
+      - title = VM1_CHECKING_LABEL_STALE_PROBE
+      - label = vm1-checking-trusted
+      - -queue-name = default
+    actions:
+      merge: {}
