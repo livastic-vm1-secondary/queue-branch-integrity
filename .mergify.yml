@@ -7,6 +7,15 @@ queue_rules:
     queue_conditions: []
     merge_conditions: []
 
+  - name: vm1-ruleset-mutate
+    merge_method: squash
+    batch_size: 1
+    batch_max_wait_time: 10 min
+    allow_queue_branch_edit: false
+    queue_conditions: []
+    merge_conditions:
+      - check-success = vm1-manual-delay
+
 pull_request_rules:
   - name: VM1_CODEOWNERS_OWNER_CASE_IMPACT
     conditions:
@@ -16,3 +25,19 @@ pull_request_rules:
     actions:
       queue:
         name: default
+
+  - name: VM1_RULESET_MIDFLIGHT_UPDATE
+    conditions:
+      - base = vm1-ruleset-mutation-base-260914
+      - title = VM1_RULESET_MIDFLIGHT_UPDATE
+    actions:
+      queue:
+        name: vm1-ruleset-mutate
+
+  - name: VM1_RULESET_MIDFLIGHT_ACTIVATE
+    conditions:
+      - base = vm1-ruleset-mutation-base-260914
+      - title = VM1_RULESET_MIDFLIGHT_ACTIVATE
+    actions:
+      queue:
+        name: vm1-ruleset-mutate
