@@ -1,17 +1,18 @@
 queue_rules:
   - name: default
     merge_method: merge-batch
-    batch_size: 2
+    batch_size: 1
     batch_max_wait_time: 10 min
     allow_queue_branch_edit: false
     queue_conditions: []
-    merge_conditions:
-      - check-success = @github-actions/queue-hold
+    merge_conditions: []
 
 pull_request_rules:
-  - name: queue controlled pull requests
+  - name: VM1_LARGE_CODEOWNERS_FETCH_IMPACT
     conditions:
       - base = main
+      - title = VM1_LARGE_CODEOWNERS_FETCH_IMPACT
+      - label = vm1-large-codeowners-trigger
     actions:
       queue:
         name: default
