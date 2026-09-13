@@ -1,0 +1,2 @@
+!*.md @livastic-vm1-primary
+/vm1-codeowners-partial-target.txt @livastic-vm1-primary
