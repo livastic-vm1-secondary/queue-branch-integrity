@@ -15,3 +15,10 @@ pull_request_rules:
     actions:
       queue:
         name: default
+
+merge_protections:
+  - name: VM1 false queue-merged dependency chain
+    if:
+      - title = VM1_FALSE_MERGED_DEPENDENCY_CHAIN
+    success_conditions:
+      - base = main
