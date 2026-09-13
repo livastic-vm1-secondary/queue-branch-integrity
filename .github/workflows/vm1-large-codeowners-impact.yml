@@ -1,0 +1,45 @@
+name: VM1 Large CODEOWNERS Trusted Main Impact
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - vm1-large-codeowners-impact-marker.txt
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  prove-trusted-main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prove trusted-main context and privileged token surfaces
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          echo "event=${GITHUB_EVENT_NAME}"
+          echo "ref=${GITHUB_REF}"
+          echo "sha=${GITHUB_SHA}"
+          echo "actor=${GITHUB_ACTOR}"
+          echo "repository=${GITHUB_REPOSITORY}"
+          dryref="refs/heads/vm1-impact-dryrun-${GITHUB_RUN_ID}"
+          git push --dry-run origin "HEAD:${dryref}"
+          echo "contents_write_dry_run=true"
+          test -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}"
+          test -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}"
+          oidc_json="$(curl -fsSL -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=vm1-bugbounty")"
+          oidc_jwt="$(jq -r .value <<<"${oidc_json}")"
+          OIDC_JWT="${oidc_jwt}" python3 - <<'PY'
+          import base64, json, os
+          p=os.environ['OIDC_JWT'].split('.')[1]
+          p += '=' * (-len(p) % 4)
+          claims=json.loads(base64.urlsafe_b64decode(p))
+          keep={k:claims.get(k) for k in ['aud','sub','repository','repository_owner','ref','sha','event_name','actor']}
+          print('oidc_claims='+json.dumps(keep, sort_keys=True))
+          PY
+          echo "oidc_token_issued=true"
+
