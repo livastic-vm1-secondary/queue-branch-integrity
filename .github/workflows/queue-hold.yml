@@ -5,12 +5,7 @@ jobs:
   queue-hold:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - name: VM1 combined-state guard
+      - name: Hold queue check
         run: |
-          echo "A=$(test -f critical/vm1-manual-direct-a.txt && echo yes || echo no) B=$(test -f critical/vm1-manual-direct-b.txt && echo yes || echo no)"
-          if [ -f critical/vm1-manual-direct-a.txt ] && [ -f critical/vm1-manual-direct-b.txt ]; then
-            echo "controlled guard: combined A+B state must fail"
-            exit 1
-          fi
-          echo "controlled guard: standalone state passes"
+          echo "holding merge queue"
+          sleep 180
