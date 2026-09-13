@@ -1,8 +1,3 @@
-commands_restrictions:
-  update:
-    conditions:
-      - title = VM1_RESTRICTION_ALLOWED
-
 queue_rules:
   - name: default
     merge_method: squash
