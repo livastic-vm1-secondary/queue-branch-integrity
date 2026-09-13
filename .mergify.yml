@@ -1,3 +1,8 @@
+commands_restrictions:
+  update:
+    conditions:
+      - sender = @trusted-cmd-ops-7f4b
+
 queue_rules:
   - name: default
     merge_method: squash
