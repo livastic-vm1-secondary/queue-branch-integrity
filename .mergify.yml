@@ -1,18 +1,17 @@
 queue_rules:
   - name: default
-    merge_method: squash
-    batch_size: 1
+    merge_method: merge-batch
+    batch_size: 2
     batch_max_wait_time: 10 min
     allow_queue_branch_edit: false
     queue_conditions: []
-    merge_conditions: []
+    merge_conditions:
+      - check-success = @github-actions/queue-hold
 
 pull_request_rules:
-  - name: VM1_CODEOWNERS_PARTIAL_ERROR_IMPACT
+  - name: queue controlled pull requests
     conditions:
       - base = main
-      - title = VM1_CODEOWNERS_PARTIAL_ERROR_IMPACT
-      - label = vm1-codeowners-partial-trigger
     actions:
       queue:
         name: default
