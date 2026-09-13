@@ -1,14 +1,17 @@
-scopes:
-  source:
-    manual:
+queue_rules:
+  - name: default
+    merge_method: merge-batch
+    batch_size: 2
+    batch_max_wait_time: 10 min
+    allow_queue_branch_edit: false
+    queue_conditions: []
+    merge_conditions:
+      - check-success = @github-actions/queue-hold
 
 pull_request_rules:
-  - name: VM1_MANUAL_SCOPE_CROSS_BASE_IMPACT
+  - name: queue controlled pull requests
     conditions:
       - base = main
-      - title = VM1_MANUAL_SCOPE_CONTEXT_LOSS_RISKY
-      - label = vm1-manual-scope-impact-trigger
-      - scope = docs
-      - -scope = critical
     actions:
-      merge: {}
+      queue:
+        name: default
