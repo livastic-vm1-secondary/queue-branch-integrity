@@ -1,20 +1,17 @@
 queue_rules:
-  - name: vm1-milestone-rename
+  - name: default
     merge_method: merge-batch
     batch_size: 2
     batch_max_wait_time: 10 min
-    checks_timeout: null
     allow_queue_branch_edit: false
-    queue_conditions:
-      - milestone = vm1-mile-old
+    queue_conditions: []
     merge_conditions:
-      - check-success = vm1-mile-hold-never
+      - check-success = @github-actions/queue-hold
 
 pull_request_rules:
-  - name: queue vm1 milestone rename fixture
+  - name: queue controlled pull requests
     conditions:
-      - base = vm1-mile-base
-      - milestone = vm1-mile-old
+      - base = main
     actions:
       queue:
-        name: vm1-milestone-rename
+        name: default
