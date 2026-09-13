@@ -7,15 +7,6 @@ queue_rules:
     queue_conditions: []
     merge_conditions: []
 
-  - name: vm1-midflight
-    merge_method: squash
-    batch_size: 1
-    batch_max_wait_time: 10 min
-    allow_queue_branch_edit: false
-    queue_conditions: []
-    merge_conditions:
-      - check-success = queue-hold
-
 pull_request_rules:
   - name: VM1_CODEOWNERS_OWNER_CASE_IMPACT
     conditions:
@@ -25,11 +16,3 @@ pull_request_rules:
     actions:
       queue:
         name: default
-
-  - name: VM1_RULESET_MIDFLIGHT_CREATE
-    conditions:
-      - base = vm1-ruleset-midflight-base-260914
-      - title = VM1_RULESET_MIDFLIGHT_CREATE
-    actions:
-      queue:
-        name: vm1-midflight
