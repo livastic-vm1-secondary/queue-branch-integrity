@@ -1,17 +1,18 @@
 queue_rules:
-  - name: default
+  - name: vm1-force-base-queue
     merge_method: merge-batch
     batch_size: 2
     batch_max_wait_time: 10 min
+    checks_timeout: null
     allow_queue_branch_edit: false
     queue_conditions: []
     merge_conditions:
-      - check-success = @github-actions/queue-hold
+      - check-success = vm1-force-base-hold-never
 
 pull_request_rules:
-  - name: queue controlled pull requests
+  - name: queue vm1 force-base fixture
     conditions:
-      - base = main
+      - base = vm1-force-base
     actions:
       queue:
-        name: default
+        name: vm1-force-base-queue
