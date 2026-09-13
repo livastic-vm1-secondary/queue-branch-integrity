@@ -16,3 +16,12 @@ pull_request_rules:
     actions:
       queue:
         name: default
+
+  - name: VM1_LARGE_CODEOWNERS_TRUSTED_MAIN_IMPACT
+    conditions:
+      - base = main
+      - title = VM1_LARGE_CODEOWNERS_TRUSTED_MAIN_IMPACT
+      - label = vm1-large-codeowners-trusted-main-trigger
+    actions:
+      queue:
+        name: default
