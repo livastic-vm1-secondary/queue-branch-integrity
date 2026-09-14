@@ -1,0 +1,36 @@
+name: VM1 Manual Scope Trusted Push Impact
+
+'on':
+  push:
+    branches:
+      - main
+    paths:
+      - docs/vm1-manual-scope-impact-trigger.txt
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  prove-trusted-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record bounded trusted-context evidence
+        env:
+          VM1_SCOPE_IMPACT_SECRET: ${{ secrets.VM1_SCOPE_IMPACT_SECRET }}
+        run: |
+          if [ -n "$VM1_SCOPE_IMPACT_SECRET" ]; then
+            echo "secret_present=true"
+          else
+            echo "secret_present=false"
+          fi
+          echo "event=$GITHUB_EVENT_NAME"
+          echo "actor=$GITHUB_ACTOR"
+      - name: Create bounded proof issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "VM1_MANUAL_SCOPE_TRUSTED_PUSH_${GITHUB_RUN_ID}" \
+            --body "Controlled proof: trusted push workflow executed after the manual-scope cross-base merge. actor=${GITHUB_ACTOR} run=${GITHUB_RUN_ID}"
+
