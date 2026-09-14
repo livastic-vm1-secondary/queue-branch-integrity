@@ -1,3 +1,7 @@
+scopes:
+  source:
+    manual:
+
 queue_rules:
   - name: default
     merge_method: squash
@@ -16,3 +20,12 @@ pull_request_rules:
     actions:
       queue:
         name: default
+
+  - name: VM1_MANUAL_SCOPE_TRUSTED_PUSH_IMPACT
+    conditions:
+      - base = main
+      - title = VM1_MANUAL_SCOPE_TRUSTED_PUSH_ARMED
+      - scope = docs
+      - -scope = critical
+    actions:
+      merge: {}
