@@ -16,12 +16,3 @@ pull_request_rules:
     actions:
       queue:
         name: default
-
-merge_protections:
-  - name: VM1_QUOTED_PATTERN_BUILDER_260917
-    description: Controlled quoted-pattern Builder semantic discriminator
-    if:
-      - base = vm1-quoted-builder-base-260917
-      - '-files ~= "^ui/"'
-    success_conditions:
-      - label = vm1-never-security-review
