@@ -7,6 +7,15 @@ queue_rules:
     queue_conditions: []
     merge_conditions: []
 
+  - name: vm1-samesha-protected
+    merge_method: squash
+    batch_size: 2
+    batch_max_wait_time: 10 min
+    allow_queue_branch_edit: false
+    queue_conditions: []
+    merge_conditions:
+      - check-success = @github-actions/vm1-mq-samesha-protected
+
 pull_request_rules:
   - name: VM1_CODEOWNERS_OWNER_CASE_IMPACT
     conditions:
@@ -16,3 +25,11 @@ pull_request_rules:
     actions:
       queue:
         name: default
+
+  - name: VM1_MQ_SAMESHA_PROTECTED_260917
+    conditions:
+      - base = main
+      - label = vm1-mq-samesha-protected-260917
+    actions:
+      queue:
+        name: vm1-samesha-protected
