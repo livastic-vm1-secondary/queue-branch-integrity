@@ -1,0 +1,48 @@
+name: VM1 Provider Spoof Protected 20260917
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  vm1-provider-spoof-required:
+    name: vm1-provider-spoof-required
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create deterministic failing JUnit
+        shell: bash
+        run: |
+          mkdir -p test-results
+          cat > test-results/junit.xml <<'XML'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <testsuite name="vm1" tests="1" failures="1">
+            <testcase name="tests/test_vm1_issue_comment_provenance.py::test_vm1_issue_comment_default_branch_provenance" time="0.01">
+              <failure type="AssertionError" message="VM1_PROVIDER_SPOOF_DETERMINISTIC_FAILURE">VM1_PROVIDER_SPOOF_DETERMINISTIC_FAILURE</failure>
+            </testcase>
+          </testsuite>
+          XML
+
+      - name: Secretless earlier step poisons provider identity
+        shell: bash
+        run: |
+          {
+            echo 'JENKINS_URL=https://jenkins.invalid/'
+            echo 'GIT_URL=https://github.com/mrg-vm1-collab-0911-b4e7/fork-update-boundary.git'
+            echo 'GIT_BRANCH=main'
+            echo 'CHANGE_TARGET=main'
+            echo "GIT_COMMIT=$GITHUB_SHA"
+            echo 'JOB_NAME=vm1-provider-spoof-required'
+            echo "BUILD_ID=$GITHUB_RUN_ID"
+            echo "NODE_NAME=$RUNNER_NAME"
+          } >> "$GITHUB_ENV"
+
+      - name: Official Mergify action - only this step sees secret
+        uses: Mergifyio/gha-mergify-ci@v25
+        with:
+          action: junit-process
+          token: ${{ secrets.VM1_PROVIDER_SPOOF_CI_260917 }}
+          report_path: test-results/junit.xml
