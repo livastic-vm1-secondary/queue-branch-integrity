@@ -16,3 +16,11 @@ pull_request_rules:
     actions:
       queue:
         name: default
+
+  - name: VM1_LOCK_BRANCH_BYPASS_260917
+    conditions:
+      - base = vm1-lock-base-260917
+      - title = VM1_LOCK_BRANCH_BYPASS_260917
+    actions:
+      merge:
+        method: merge
