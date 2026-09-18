@@ -1,28 +1,13 @@
-# VM1 controlled legacy post_check dual-list migration probe 260918
+# queue rule 'default': `allow_queue_branch_edit` was removed. It was already set to `false`, the default, and the option is being retired.
 queue_rules:
   - name: default
     merge_method: squash
     batch_size: 1
     batch_max_wait_time: 10 min
-    allow_queue_branch_edit: false
     queue_conditions: []
     merge_conditions: []
 
 pull_request_rules:
-  - name: VM1_POST_CHECK_DUAL_LIST_MIGRATION_PROBE
-    conditions:
-      - label = vm1-never-trigger-postcheck-migration-260918
-    actions:
-      post_check:
-        title: VM1 controlled post_check migration probe
-        summary: Never-trigger migration-only probe
-        success_conditions:
-          - label = vm1-success-a-260918
-          - label = vm1-success-b-260918
-        neutral_conditions:
-          - label = vm1-neutral-c-260918
-          - label = vm1-neutral-d-260918
-
   - name: VM1_CODEOWNERS_OWNER_CASE_IMPACT
     conditions:
       - base = main
@@ -31,3 +16,14 @@ pull_request_rules:
     actions:
       queue:
         name: default
+merge_protections:
+  # Migrated from post_check rule 'VM1_POST_CHECK_DUAL_LIST_MIGRATION_PROBE'. Dropped options with no equivalent: title, summary
+  - name: VM1_POST_CHECK_DUAL_LIST_MIGRATION_PROBE
+    if:
+      - label = vm1-never-trigger-postcheck-migration-260918
+    success_conditions:
+      - or:
+          - label = vm1-success-a-260918
+          - label = vm1-success-b-260918
+          - label = vm1-neutral-c-260918
+          - label = vm1-neutral-d-260918
