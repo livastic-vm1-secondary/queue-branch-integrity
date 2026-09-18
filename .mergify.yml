@@ -1,4 +1,3 @@
-# queue rule 'default': `allow_queue_branch_edit` was removed. It was already set to `false`, the default, and the option is being retired.
 queue_rules:
   - name: default
     merge_method: squash
@@ -16,14 +15,3 @@ pull_request_rules:
     actions:
       queue:
         name: default
-merge_protections:
-  # Migrated from post_check rule 'VM1_POST_CHECK_DUAL_LIST_MIGRATION_PROBE'. Dropped options with no equivalent: title, summary
-  - name: VM1_POST_CHECK_DUAL_LIST_MIGRATION_PROBE
-    if:
-      - label = vm1-never-trigger-postcheck-migration-260918
-    success_conditions:
-      - or:
-          - label = vm1-success-a-260918
-          - label = vm1-success-b-260918
-          - label = vm1-neutral-c-260918
-          - label = vm1-neutral-d-260918
