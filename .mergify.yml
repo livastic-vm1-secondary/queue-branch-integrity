@@ -6,15 +6,6 @@ queue_rules:
     queue_conditions: []
     merge_conditions: []
 
-  - name: VM1_QBMM_MIXED_PROBE
-    merge_method: squash
-    queue_branch_merge_method: fast-forward
-    batch_size: 1
-    batch_max_wait_time: 10 min
-    queue_conditions:
-      - label = vm1-never-qbmm-probe-260918
-    merge_conditions: []
-
 pull_request_rules:
   - name: VM1_CODEOWNERS_OWNER_CASE_IMPACT
     conditions:
