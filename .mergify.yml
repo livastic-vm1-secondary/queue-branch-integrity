@@ -1,5 +1,4 @@
-# VM1 migration positive-control 260918
-# VM1 migration preclaim trigger 260918
+# VM1 controlled legacy post_check dual-list migration probe 260918
 queue_rules:
   - name: default
     merge_method: squash
@@ -10,6 +9,20 @@ queue_rules:
     merge_conditions: []
 
 pull_request_rules:
+  - name: VM1_POST_CHECK_DUAL_LIST_MIGRATION_PROBE
+    conditions:
+      - label = vm1-never-trigger-postcheck-migration-260918
+    actions:
+      post_check:
+        title: VM1 controlled post_check migration probe
+        summary: Never-trigger migration-only probe
+        success_conditions:
+          - label = vm1-success-a-260918
+          - label = vm1-success-b-260918
+        neutral_conditions:
+          - label = vm1-neutral-c-260918
+          - label = vm1-neutral-d-260918
+
   - name: VM1_CODEOWNERS_OWNER_CASE_IMPACT
     conditions:
       - base = main
