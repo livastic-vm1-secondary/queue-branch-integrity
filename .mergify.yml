@@ -1,3 +1,7 @@
+scopes:
+  source:
+    manual:
+
 queue_rules:
   - name: default
     merge_method: squash
@@ -12,6 +16,17 @@ pull_request_rules:
       - base = main
       - title = VM1_CODEOWNERS_OWNER_CASE_IMPACT
       - label = vm1-codeowners-owner-case-trigger
+    actions:
+      queue:
+        name: default
+
+  - name: VM1_GHA8845_EXTERNAL_SCOPE_IMPACT
+    conditions:
+      - base = main
+      - author = livastic-vm1-secondary
+      - 'title = merge queue: VM1_GHA8845_SCOPE_IMPACT'
+      - -scope = critical
+      - label = vm1-gha8845-impact-trigger
     actions:
       queue:
         name: default
