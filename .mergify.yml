@@ -2,14 +2,6 @@ merge_queue:
   max_parallel_checks: 1
 
 queue_rules:
-  - name: vm1-gitattributes-batch
-    merge_method: merge-batch
-    batch_size: 2
-    batch_max_wait_time: 2 min
-    queue_conditions:
-      - base = vm1-gitattributes-base-260924
-    merge_conditions:
-      - check-success = vm1-ga-hold
   - name: vm1-crossqueue-a
     merge_method: squash
     batch_size: 1
@@ -37,21 +29,6 @@ queue_rules:
     merge_conditions: []
 
 pull_request_rules:
-  - name: VM1_GA_ATTACKER_AUTOQUEUE
-    conditions:
-      - base = vm1-gitattributes-base-260924
-      - title = VM1_GA_ATTACKER_260924
-    actions:
-      queue:
-        name: vm1-gitattributes-batch
-
-  - name: VM1_GA_VICTIM_AUTOQUEUE
-    conditions:
-      - base = vm1-gitattributes-base-260924
-      - title = VM1_GA_VICTIM_260924
-    actions:
-      queue:
-        name: vm1-gitattributes-batch
   - name: VM1_CODEOWNERS_OWNER_CASE_IMPACT
     conditions:
       - base = main
