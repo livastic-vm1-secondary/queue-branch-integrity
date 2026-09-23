@@ -57,3 +57,13 @@ pull_request_rules:
       label:
         add:
           - vm1-qcheck-qualified-match
+
+  - name: VM1_CHECKRUN_PAGINATION_PROBE_260924
+    conditions:
+      - title = VM1_CHECKRUN_PAGINATION_PROBE_260924
+      - -check-failure = VM1_CHECKRUN_HIDDEN_FAILURE_260924
+    actions:
+      label:
+        add:
+          - vm1-checkrun-pagination-probe
+
