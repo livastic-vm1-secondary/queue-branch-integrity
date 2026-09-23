@@ -57,3 +57,14 @@ pull_request_rules:
       label:
         add:
           - vm1-qcheck-qualified-match
+
+  - name: VM1_DISMISS_OWN_UPDATE_260924
+    conditions:
+      - base = vm1-dismiss-ownpush-base-260924
+      - title = VM1_DISMISS_OWN_UPDATE_TRIGGER_260924
+    actions:
+      update:
+      dismiss_reviews:
+        approved: false
+        changes_requested: true
+
