@@ -1,3 +1,15 @@
+merge_protections_settings:
+  post_comment: false
+
+merge_protections:
+  - name: VM1_CURRENT_250_COMMIT_FRESHNESS_260924
+    if:
+      - base = main
+      - title = Vm1b commit signature pagination bypass 20260912
+    success_conditions:
+      - "#commits = 251"
+      - "#commits-unverified = 0"
+
 merge_queue:
   max_parallel_checks: 1
 
