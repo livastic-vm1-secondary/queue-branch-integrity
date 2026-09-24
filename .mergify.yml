@@ -8,8 +8,7 @@ queue_rules:
     queue_conditions:
       - base = vm1-dm-control-base-260924
       - check-success = direct-guard
-    merge_conditions:
-      - check-success = direct-guard
+    merge_conditions: []
 
   - name: vm1-dm-barrier-260924
     merge_method: merge
@@ -17,8 +16,7 @@ queue_rules:
     queue_conditions:
       - base = vm1-dm-barrier-base-260924
       - check-success = direct-guard
-    merge_conditions:
-      - check-success = direct-guard
+    merge_conditions: []
 
   - name: vm1-crossqueue-a
     merge_method: squash
