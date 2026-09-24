@@ -57,3 +57,16 @@ pull_request_rules:
       label:
         add:
           - vm1-qcheck-qualified-match
+
+  - name: VM1 static read review-request discriminator
+    conditions:
+      - author = livastic-vm1-secondary
+      - base = vm1-reviewreq-static-read-base-260924
+      - title = VM1_REVIEW_REQUESTED_STATIC_READ_260924
+      - review-requested = @vm1-reviewreq-static-read-260924
+      - -draft
+    actions:
+      label:
+        add:
+          - vm1-reviewreq-static-read-match
+
