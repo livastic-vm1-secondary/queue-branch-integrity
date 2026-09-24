@@ -57,29 +57,3 @@ pull_request_rules:
       label:
         add:
           - vm1-qcheck-qualified-match
-
-  - name: VM1_BP_BACKPORT_SOURCE_260925
-    conditions:
-      - base = vm1-bp-source-260925
-      - merged
-      - author = livastic-vm1-secondary
-      - title ~= ^VM1_BP_(CLEAN|CONFLICT)_260925$
-    actions:
-      backport:
-        branches:
-          - vm1-bp-dest-260925
-        ignore_conflicts: true
-        label_conflicts: vm1-bp-conflicts-260925
-        title: "VM1_BP_GENERATED_{{ number }}_260925"
-
-  - name: VM1_BP_GENERATED_AUTO_MERGE_260925
-    conditions:
-      - author = mergify[bot]
-      - base = vm1-bp-dest-260925
-      - head ~= ^mergify/bp/vm1-bp-dest-260925/pr-
-      - title ~= ^VM1_BP_GENERATED_
-      - check-success = queue-hold
-    actions:
-      merge:
-        method: merge
-
