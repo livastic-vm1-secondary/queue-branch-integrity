@@ -2,22 +2,6 @@ merge_queue:
   max_parallel_checks: 1
 
 queue_rules:
-  - name: vm1-dm-control-260924
-    merge_method: merge
-    batch_size: 1
-    queue_conditions:
-      - base = vm1-dm-control-base-260924
-      - check-success = direct-guard
-    merge_conditions: []
-
-  - name: vm1-dm-barrier-260924
-    merge_method: merge
-    batch_size: 1
-    queue_conditions:
-      - base = vm1-dm-barrier-base-260924
-      - check-success = direct-guard
-    merge_conditions: []
-
   - name: vm1-crossqueue-a
     merge_method: squash
     batch_size: 1
@@ -73,49 +57,3 @@ pull_request_rules:
       label:
         add:
           - vm1-qcheck-qualified-match
-
-  - name: VM1_DM_CONTROL_X_260924
-    conditions:
-      - base = vm1-dm-control-base-260924
-      - title = VM1_DM_CONTROL_X_260924
-    actions:
-      queue:
-        name: vm1-dm-control-260924
-
-  - name: VM1_DM_CONTROL_Y_260924
-    conditions:
-      - base = vm1-dm-control-base-260924
-      - title = VM1_DM_CONTROL_Y_260924
-    actions:
-      queue:
-        name: vm1-dm-control-260924
-
-  - name: VM1_DM_BARRIER_X_260924
-    conditions:
-      - base = vm1-dm-barrier-base-260924
-      - title = VM1_DM_BARRIER_X_260924
-    actions:
-      queue:
-        name: vm1-dm-barrier-260924
-
-  - name: VM1_DM_BARRIER_Y_260924
-    conditions:
-      - base = vm1-dm-barrier-base-260924
-      - title = VM1_DM_BARRIER_Y_260924
-    actions:
-      queue:
-        name: vm1-dm-barrier-260924
-
-scopes:
-  source:
-    files:
-      dm-x:
-        include:
-          - dm/x/**
-      dm-y:
-        include:
-          - dm/y/**
-  barrier_files:
-    include:
-      - dm/barrier/**
-
