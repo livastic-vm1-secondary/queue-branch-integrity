@@ -69,14 +69,3 @@ pull_request_rules:
         summary: Controlled review-request removal freshness discriminator
         success_conditions:
           - review-requested = livastic-vm1-primary
-
-merge_protections_settings:
-  post_comment: false
-
-merge_protections:
-  - name: VM1 MP product-off fresh-event native gate
-    if:
-      - base = vm1-mp-off-base-260927
-      - title = VM1_MP_OFF_260927
-    success_conditions:
-      - check-success = queue-hold
