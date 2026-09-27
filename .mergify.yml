@@ -28,15 +28,6 @@ queue_rules:
       - base != vm1-crossqueue-base2-260923
     merge_conditions: []
 
-  - name: vm1-provider-extfork-260927
-    merge_method: squash
-    batch_size: 1
-    queue_conditions:
-      - base = vm1-provider-extfork-base-260927
-      - title = VM1_PROVIDER_EXTFORK_260927
-    merge_conditions:
-      - check-success = vm1-provider-never-finalize-260927
-
 pull_request_rules:
   - name: VM1_CODEOWNERS_OWNER_CASE_IMPACT
     conditions:
@@ -78,12 +69,3 @@ pull_request_rules:
         summary: Controlled review-request removal freshness discriminator
         success_conditions:
           - review-requested = livastic-vm1-primary
-
-  - name: VM1_PROVIDER_EXTFORK_AUTOQUEUE_260927
-    conditions:
-      - base = vm1-provider-extfork-base-260927
-      - title = VM1_PROVIDER_EXTFORK_260927
-      - author = livastic-vm1-secondary
-    actions:
-      queue:
-        name: vm1-provider-extfork-260927
