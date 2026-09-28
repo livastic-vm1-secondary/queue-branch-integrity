@@ -1,0 +1,27 @@
+name: VM1 Provider External Fork Actual Merge
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+permissions:
+  contents: read
+
+jobs:
+  vm1-provider-external-fork-merge:
+    name: vm1-provider-external-fork-merge
+    if: github.event.pull_request.base.ref == 'vm1-provider-extfork-merge-base-260928'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Attacker-controlled pre-reporter step
+        shell: bash
+        run: |
+          chmod +x ./vm1-provider-env.sh
+          ./vm1-provider-env.sh
+
+      - name: Official Mergify action - privileged credential only here
+        uses: Mergifyio/gha-mergify-ci@v25
+        with:
+          action: junit-process
+          token: ${{ secrets.VM1_PROVIDER_EXTFORK_MERGE_CI_260928 }}
+          report_path: test-results/junit.xml
