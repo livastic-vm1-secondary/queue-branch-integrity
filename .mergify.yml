@@ -69,3 +69,13 @@ pull_request_rules:
         summary: Controlled review-request removal freshness discriminator
         success_conditions:
           - review-requested = livastic-vm1-primary
+
+  - name: VM1_BUILDKITE_SCOPE_IMPACT_261004
+    conditions:
+      - "number = 378"
+      - "base = vm1-reviewreq-remove-base-260927"
+      - "author = livastic-vm1-secondary"
+      - "-scope = protected/vm1-jenkins-scope-h3-261004.txt"
+    actions:
+      queue:
+        name: default
