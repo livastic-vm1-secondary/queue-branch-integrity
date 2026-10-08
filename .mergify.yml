@@ -28,6 +28,16 @@ queue_rules:
       - base != vm1-crossqueue-base2-260923
     merge_conditions: []
 
+  - name: vm1-pkgopt-261009
+    merge_method: merge-batch
+    batch_size: 2
+    batch_max_wait_time: 10 min
+    queue_conditions:
+      - base = vm1-pkgopt-target-261009
+      - title ~= ^VM1_PKGOPT_(A|B)_261009$
+    merge_conditions:
+      - check-success = vm1-pkgopt-release-261009
+
 pull_request_rules:
   - name: VM1_CODEOWNERS_OWNER_CASE_IMPACT
     conditions:
@@ -89,4 +99,16 @@ pull_request_rules:
     actions:
       merge:
         method: merge
+  - name: VM1_PKGOPT_AUTOQUEUE_261009
+    conditions:
+      - base = vm1-pkgopt-target-261009
+      - title ~= ^VM1_PKGOPT_(A|B)_261009$
+    actions:
+      queue:
+        name: vm1-pkgopt-261009
+
+conflict_resolvers:
+  - package-manager: npm
+    directories:
+      - /pkg
 
