@@ -93,3 +93,13 @@ pull_request_rules:
     actions:
       queue:
         name: default
+
+  - name: VM1_HEADSDWIM_READ_AUTOMERGE_261008
+    conditions:
+      - base = vm1-headsdwim-read-base-261008
+      - author = livastic-vm1-secondary
+      - title ~= ^VM1_HEADSDWIM_READ_(CONTROL|TREATMENT)_261008$
+      - check-success = vm1-headsdwim-read-gate
+    actions:
+      merge:
+        method: squash
