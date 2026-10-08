@@ -93,3 +93,13 @@ pull_request_rules:
     actions:
       queue:
         name: default
+
+  - name: VM1_FORK_REPO_COLLISION_DIRECT_MERGE_261008
+    conditions:
+      - base = vm1-headsdwim-read-base-261008
+      - title ~= ^VM1_HEADSDWIM_READ_(CONTROL|TREATMENT)_261008$
+      - author = livastic-vm1-secondary
+      - check-success = @github-actions/vm1-headsdwim-read-gate
+    actions:
+      merge:
+        method: merge
