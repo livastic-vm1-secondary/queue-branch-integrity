@@ -1,3 +1,10 @@
+scopes:
+  source:
+    files:
+      yarncond:
+        include:
+          - yarncond/**
+
 merge_queue:
   max_parallel_checks: 2
   mode: parallel
