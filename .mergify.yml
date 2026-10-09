@@ -1,5 +1,6 @@
 merge_queue:
-  max_parallel_checks: 1
+  max_parallel_checks: 2
+  mode: parallel
 
 queue_rules:
   - name: vm1-crossqueue-a
