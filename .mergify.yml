@@ -38,6 +38,17 @@ queue_rules:
     merge_conditions:
       - check-success = vm1-pkgopt-release-261009
 
+  - name: vm1-yarncond-261010
+    merge_method: merge-batch
+    batch_size: 2
+    batch_max_wait_time: 5 minutes
+    queue_conditions:
+      - base = vm1-yarncond-base-261010
+      - title ~= ^VM1_YARNCOND_[AB]_261010$
+    autoqueue: true
+    merge_conditions:
+      - check-success = vm1-yarncond-never-261010
+
 pull_request_rules:
   - name: VM1_CODEOWNERS_OWNER_CASE_IMPACT
     conditions:
@@ -111,4 +122,7 @@ conflict_resolvers:
   - package-manager: npm
     directories:
       - /pkg
+  - paths:
+      - yarncond/yarn.lock
+    strategy: yarn
 
