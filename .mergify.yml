@@ -1,7 +1,26 @@
+scopes:
+  source:
+    files:
+      yarncond:
+        include:
+          - yarncond/**
+
 merge_queue:
-  max_parallel_checks: 1
+  max_parallel_checks: 2
+  mode: parallel
 
 queue_rules:
+  - name: vm1-yarncond-261010
+    merge_method: merge-batch
+    batch_size: 2
+    batch_max_wait_time: 5 minutes
+    queue_conditions:
+      - base = vm1-yarncond-base-261010
+      - title ~= ^VM1_YARNCOND_[AB]_261010$
+    autoqueue: true
+    merge_conditions:
+      - check-success = vm1-yarncond-never-261010
+
   - name: vm1-crossqueue-a
     merge_method: squash
     batch_size: 1
@@ -108,6 +127,9 @@ pull_request_rules:
         name: vm1-pkgopt-261009
 
 conflict_resolvers:
+  - paths:
+      - yarncond/yarn.lock
+    strategy: yarn
   - package-manager: npm
     directories:
       - /pkg
